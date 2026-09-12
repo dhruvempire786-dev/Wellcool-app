@@ -1,10 +1,155 @@
-
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const whatsappNumber = '918707631837';
 
 void main() => runApp(const WellcoolApp());
+
+class Product {
+  final String name, price, category, image;
+  final List<String> colors;
+
+  const Product(
+    this.name,
+    this.price,
+    this.category,
+    this.image, {
+    this.colors = const ['Black', 'White', 'Blue'],
+  });
+}
+
+const products = <Product>[
+  Product('Embroidered Peach Suit','₹1,499','Women Suits','assets/images/products/p01.jpg',colors:['Peach','Pink','White']),
+  Product('Sage Green Puff Sleeve Crop Top','₹799','Women Crop Tops','assets/images/products/p02.jpg',colors:['Sage Green','Black','White']),
+  Product('Sky Blue Graphic T-Shirt','₹699','Men T-Shirts','assets/images/products/p03.jpg',colors:['Sky Blue','Black','White']),
+  Product('Classic Blue Baggy Jeans','₹1,099','Men Baggy Jeans','assets/images/products/p04.jpg',colors:['Blue','Black','Grey']),
+  Product('White Wide-Leg Pants','₹999','Men Baggy Jeans','assets/images/products/p05.jpg',colors:['White','Black','Beige']),
+  Product('Teal Designer Saree','₹1,299','Women Sarees','assets/images/products/p06.jpg',colors:['Teal','Wine','Black']),
+  Product('Light Blue Casual Shirt','₹899','Men Shirts','assets/images/products/p07.jpg',colors:['Light Blue','White','Black']),
+  Product('Black Graphic Crop Top','₹699','Women Crop Tops','assets/images/products/p08.jpg',colors:['Black','White','Pink']),
+  Product('Yellow Puff Sleeve Top','₹749','Women Tops','assets/images/products/p09.jpg',colors:['Yellow','White','Pink']),
+  Product('Dusty Pink Casual Shirt','₹899','Men Shirts','assets/images/products/p10.jpg',colors:['Dusty Pink','White','Black']),
+  Product('Olive Floral Crop Top','₹799','Women Crop Tops','assets/images/products/p11.jpg',colors:['Olive','Black','White']),
+  Product('Wine Border Saree','₹1,199','Women Sarees','assets/images/products/p12.jpg',colors:['Wine','Red','Black']),
+  Product('Royal Blue Suit Set','₹1,399','Women Suits','assets/images/products/p13.jpg',colors:['Royal Blue','Pink','Black']),
+  Product('White Black Stripe T-Shirt','₹699','Men T-Shirts','assets/images/products/p14.jpg',colors:['White','Black','Grey']),
+  Product('Black Chunky Sneakers','₹1,199','Women Shoes / Sandals','assets/images/products/p15.jpg',colors:['Black','White','Beige']),
+  Product('White Casual Sneakers','₹999','Women Shoes / Sandals','assets/images/products/p16.jpg',colors:['White','Black','Pink']),
+  Product('White Navy Sneakers','₹1,099','Women Shoes / Sandals','assets/images/products/p17.jpg',colors:['White','Navy','Black']),
+  Product('Boston Oversized T-Shirt','₹749','Men T-Shirts','assets/images/products/p18.jpg',colors:['Black','White','Grey']),
+  Product('Washed Black Baggy Jeans','₹1,099','Men Baggy Jeans','assets/images/products/p19.jpg',colors:['Washed Black','Blue','Grey']),
+  Product('White Grey High-Top Sneakers','₹1,299','Men Shoes','assets/images/products/p20.jpg',colors:['White','Grey','Black']),
+  Product('White Navy Running Sneakers','₹1,199','Women Shoes / Sandals','assets/images/products/p21.jpg',colors:['White','Navy','Pink']),
+  Product('Cream Graphic T-Shirt','₹749','Men T-Shirts','assets/images/products/p22.jpg',colors:['Cream','Black','White']),
+  Product('Blue Printed Suit Set','₹1,399','Women Suits','assets/images/products/p23.jpg',colors:['Blue','Pink','Black']),
+  Product('Pink Casual Embroidered Top','₹799','Women Tops','assets/images/products/p24.jpg',colors:['Pink','White','Black']),
+  Product('Grey Orange Sport Sneakers','₹1,299','Men Shoes','assets/images/products/p25.jpg',colors:['Grey','Orange','Black']),
+  Product('Black Casual Shirt','₹899','Men Shirts','assets/images/products/p26.jpg',colors:['Black','White','Blue']),
+  Product('Light Blue Loose Baggy Jeans','₹1,099','Men Baggy Jeans','assets/images/products/p27.jpg',colors:['Light Blue','Blue','Black']),
+  Product('White Floral Puff Sleeve Top','₹799','Women Tops','assets/images/products/p28.jpg',colors:['White','Pink','Yellow']),
+  Product('Maroon Casual Shirt','₹899','Men Shirts','assets/images/products/p29.jpg',colors:['Maroon','White','Black']),
+];
+
+const categories = [
+  'Women Tops',
+  'Women Crop Tops',
+  'Women Sarees',
+  'Women Shoes / Sandals',
+  'Men Shirts',
+  'Men T-Shirts',
+  'Women Suits',
+  'Men Shoes',
+  'Men Baggy Jeans',
+];
+
+String categoryImage(String c) {
+  final p = products.firstWhere((x) => x.category == c);
+  return p.image;
+}
+
+class CartItem {
+  final Product product;
+  final String color, size;
+  int quantity;
+
+  CartItem({
+    required this.product,
+    required this.color,
+    required this.size,
+    this.quantity = 1,
+  });
+}
+
+class Store extends ChangeNotifier {
+  final wishlist = <Product>[];
+  final cart = <CartItem>[];
+
+  bool liked(Product p) => wishlist.contains(p);
+
+  void toggleLike(Product p) {
+    liked(p) ? wishlist.remove(p) : wishlist.add(p);
+    notifyListeners();
+  }
+
+  void add(Product p, String color, String size, int qty) {
+    final found = cart.where(
+      (x) => x.product == p && x.color == color && x.size == size,
+    );
+
+    if (found.isNotEmpty) {
+      found.first.quantity += qty;
+    } else {
+      cart.add(
+        CartItem(
+          product: p,
+          color: color,
+          size: size,
+          quantity: qty,
+        ),
+      );
+    }
+    notifyListeners();
+  }
+
+  void qty(CartItem item, int change) {
+    item.quantity += change;
+    if (item.quantity <= 0) cart.remove(item);
+    notifyListeners();
+  }
+
+  void remove(CartItem item) {
+    cart.remove(item);
+    notifyListeners();
+  }
+
+  int get count => cart.fold(0, (a, b) => a + b.quantity);
+
+  int price(String s) =>
+      int.tryParse(s.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
+
+  int get total =>
+      cart.fold(0, (a, b) => a + price(b.product.price) * b.quantity);
+}
+
+final store = Store();
+
+Future<void> whatsapp({
+  required String product,
+  String? color,
+  String? size,
+  int quantity = 1,
+}) async {
+  String text = 'Hi Wellcool, I want to order $product.';
+  if (color != null) text += '\nColour: $color';
+  if (size != null) text += '\nSize: $size';
+  text += '\nQuantity: $quantity';
+
+  final uri = Uri.parse(
+    'https://wa.me/$whatsappNumber?text=${Uri.encodeComponent(text)}',
+  );
+
+  await launchUrl(uri, mode: LaunchMode.externalApplication);
+}
 
 class WellcoolApp extends StatelessWidget {
   const WellcoolApp({super.key});
@@ -17,6 +162,10 @@ class WellcoolApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF080A0D),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF3D9BFF),
+          brightness: Brightness.dark,
+        ),
         useMaterial3: true,
       ),
       home: const Shell(),
@@ -34,118 +183,160 @@ class Shell extends StatefulWidget {
 class _ShellState extends State<Shell> {
   int tab = 0;
 
-  final pages = const [
-    HomePage(),
-    CategoriesPage(),
-    SearchPage(),
-    WishlistPage(),
-    CartPage(),
-  ];
+  void drawer() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF11151A),
+      isScrollControlled: true,
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'wellcool.',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              _menu(Icons.home, 'Home', () {
+                Navigator.pop(ctx);
+                setState(() => tab = 0);
+              }),
+              _menu(Icons.grid_view, 'Categories', () {
+                Navigator.pop(ctx);
+                setState(() => tab = 1);
+              }),
+              _menu(Icons.search, 'Search', () {
+                Navigator.pop(ctx);
+                setState(() => tab = 2);
+              }),
+              _menu(Icons.favorite, 'Wishlist', () {
+                Navigator.pop(ctx);
+                setState(() => tab = 3);
+              }),
+              _menu(Icons.shopping_cart, 'Cart', () {
+                Navigator.pop(ctx);
+                setState(() => tab = 4);
+              }),
+              const Divider(),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Shop Categories',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ...categories.map(
+                (c) => ListTile(
+                  leading: const Icon(Icons.chevron_right),
+                  title: Text(c),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => CategoryPage(category: c),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _menu(IconData icon, String title, VoidCallback tap) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: tap,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final pages = [
+      HomePage(
+        onMenu: drawer,
+        onSearch: () => setState(() => tab = 2),
+      ),
+      const CategoriesPage(),
+      const SearchPage(),
+      const WishlistPage(),
+      const CartPage(),
+    ];
+
     return Scaffold(
       body: SafeArea(child: pages[tab]),
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: const Color(0xFF07090C),
-        indicatorColor: const Color(0xFF102A48),
-        selectedIndex: tab,
-        onDestinationSelected: (i) => setState(() => tab = i),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.grid_view_outlined),
-            selectedIcon: Icon(Icons.grid_view),
-            label: 'Categories',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.favorite_border),
-            selectedIcon: Icon(Icons.favorite),
-            label: 'Wishlist',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.shopping_cart_outlined),
-            selectedIcon: Icon(Icons.shopping_cart),
-            label: 'Cart',
-          ),
-        ],
+      bottomNavigationBar: AnimatedBuilder(
+        animation: store,
+        builder: (_, __) => NavigationBar(
+          backgroundColor: const Color(0xFF07090C),
+          indicatorColor: const Color(0xFF102A48),
+          selectedIndex: tab,
+          onDestinationSelected: (i) => setState(() => tab = i),
+          destinations: [
+            const NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            const NavigationDestination(
+              icon: Icon(Icons.grid_view_outlined),
+              selectedIcon: Icon(Icons.grid_view),
+              label: 'Categories',
+            ),
+            const NavigationDestination(
+              icon: Icon(Icons.search),
+              label: 'Search',
+            ),
+            NavigationDestination(
+              icon: const Icon(Icons.favorite_border),
+              selectedIcon: const Icon(Icons.favorite),
+              label: 'Wishlist',
+            ),
+            NavigationDestination(
+              icon: Badge(
+                isLabelVisible: store.count > 0,
+                label: Text('${store.count}'),
+                child: const Icon(Icons.shopping_cart_outlined),
+              ),
+              selectedIcon: Badge(
+                isLabelVisible: store.count > 0,
+                label: Text('${store.count}'),
+                child: const Icon(Icons.shopping_cart),
+              ),
+              label: 'Cart',
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-const cats = [
-  ['Women Tops', 'Trendy & Comfortable', 'assets/images/products/p09.jpg'],
-  ['Women Crop Tops', 'Stylish Everyday', 'assets/images/products/p02.jpg'],
-  ['Women Sarees', 'Traditional & Modern', 'assets/images/products/p06.jpg'],
-  ['Women Shoes / Sandals', 'Casual & Premium', 'assets/images/products/p15.jpg'],
-  ['Men Shirts', 'Casual & Formal', 'assets/images/products/p07.jpg'],
-  ['Men T-Shirts', 'Everyday Essentials', 'assets/images/products/p03.jpg'],
-  ['Women Suits', 'Elegant & Modern', 'assets/images/products/p01.jpg'],
-  ['Men Shoes', 'Comfort & Style', 'assets/images/products/p20.jpg'],
-  ['Men Baggy Jeans', 'Relaxed Fit', 'assets/images/products/p04.jpg'],
-];
-
-const products = [
-  ['Embroidered Peach Suit', '₹1,499', 'Women Suits', 'assets/images/products/p01.jpg'],
-  ['Sage Green Puff Sleeve Crop Top', '₹799', 'Women Crop Tops', 'assets/images/products/p02.jpg'],
-  ['Sky Blue Graphic T-Shirt', '₹699', 'Men T-Shirts', 'assets/images/products/p03.jpg'],
-  ['Classic Blue Baggy Jeans', '₹1,099', 'Men Baggy Jeans', 'assets/images/products/p04.jpg'],
-  ['White Wide-Leg Pants', '₹999', 'Men Baggy Jeans', 'assets/images/products/p05.jpg'],
-  ['Teal Designer Saree', '₹1,299', 'Women Sarees', 'assets/images/products/p06.jpg'],
-  ['Light Blue Casual Shirt', '₹899', 'Men Shirts', 'assets/images/products/p07.jpg'],
-  ['Black Graphic Crop Top', '₹699', 'Women Crop Tops', 'assets/images/products/p08.jpg'],
-  ['Yellow Puff Sleeve Top', '₹749', 'Women Tops', 'assets/images/products/p09.jpg'],
-  ['Dusty Pink Casual Shirt', '₹899', 'Men Shirts', 'assets/images/products/p10.jpg'],
-  ['Olive Floral Crop Top', '₹799', 'Women Crop Tops', 'assets/images/products/p11.jpg'],
-  ['Wine Border Saree', '₹1,199', 'Women Sarees', 'assets/images/products/p12.jpg'],
-  ['Royal Blue Suit Set', '₹1,399', 'Women Suits', 'assets/images/products/p13.jpg'],
-  ['White Black Stripe T-Shirt', '₹699', 'Men T-Shirts', 'assets/images/products/p14.jpg'],
-  ['Black Chunky Sneakers', '₹1,199', 'Women Shoes / Sandals', 'assets/images/products/p15.jpg'],
-  ['White Casual Sneakers', '₹999', 'Women Shoes / Sandals', 'assets/images/products/p16.jpg'],
-  ['White Navy Sneakers', '₹1,099', 'Women Shoes / Sandals', 'assets/images/products/p17.jpg'],
-  ['Boston Oversized T-Shirt', '₹749', 'Men T-Shirts', 'assets/images/products/p18.jpg'],
-  ['Washed Black Baggy Jeans', '₹1,099', 'Men Baggy Jeans', 'assets/images/products/p19.jpg'],
-  ['White Grey High-Top Sneakers', '₹1,299', 'Men Shoes', 'assets/images/products/p20.jpg'],
-  ['White Navy Running Sneakers', '₹1,199', 'Women Shoes / Sandals', 'assets/images/products/p21.jpg'],
-  ['Cream Graphic T-Shirt', '₹749', 'Men T-Shirts', 'assets/images/products/p22.jpg'],
-  ['Blue Printed Suit Set', '₹1,399', 'Women Suits', 'assets/images/products/p23.jpg'],
-  ['Pink Casual Embroidered Top', '₹799', 'Women Tops', 'assets/images/products/p24.jpg'],
-  ['Grey Orange Sport Sneakers', '₹1,299', 'Men Shoes', 'assets/images/products/p25.jpg'],
-  ['Black Casual Shirt', '₹899', 'Men Shirts', 'assets/images/products/p26.jpg'],
-  ['Light Blue Loose Baggy Jeans', '₹1,099', 'Men Baggy Jeans', 'assets/images/products/p27.jpg'],
-  ['White Floral Puff Sleeve Top', '₹799', 'Women Tops', 'assets/images/products/p28.jpg'],
-  ['Maroon Casual Shirt', '₹899', 'Men Shirts', 'assets/images/products/p29.jpg'],
-];
-
-const best = [
-  ['Embroidered Peach Suit', '₹1,499', 'assets/images/products/p01.jpg'],
-  ['Sage Green Crop Top', '₹799', 'assets/images/products/p02.jpg'],
-  ['Sky Blue T-Shirt', '₹699', 'assets/images/products/p03.jpg'],
-  ['Classic Blue Baggy Jeans', '₹1,099', 'assets/images/products/p04.jpg'],
-];
-
-Future<void> order(String product) async {
-  final u = Uri.parse(
-    'https://wa.me/$whatsappNumber?text=${Uri.encodeComponent('Hi Wellcool, I want to order $product.')}',
-  );
-
-  await launchUrl(
-    u,
-    mode: LaunchMode.externalApplication,
-  );
-}
-
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final VoidCallback onMenu, onSearch;
+
+  const HomePage({
+    super.key,
+    required this.onMenu,
+    required this.onSearch,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -156,33 +347,32 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(18, 12, 18, 8),
             child: Row(
               children: [
-                const Icon(Icons.menu, size: 31),
-                const SizedBox(width: 14),
-                ShaderMask(
-                  shaderCallback: (r) => const LinearGradient(
-                    colors: [
-                      Color(0xFF00B7FF),
-                      Color(0xFF8B5CFF),
-                      Color(0xFFFF38D1),
-                    ],
-                  ).createShader(r),
-                  child: const Text(
-                    'wellcool.',
-                    style: TextStyle(
-                      fontSize: 31,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                    ),
-                  ),
+                IconButton(
+                  onPressed: onMenu,
+                  icon: const Icon(Icons.menu, size: 31),
                 ),
+                const Brand(),
                 const Spacer(),
                 IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite_border, size: 30),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const WishlistPage(),
+                    ),
+                  ),
+                  icon: const Icon(Icons.favorite_border, size: 29),
                 ),
                 IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.shopping_cart_outlined, size: 30),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const CartPage(),
+                    ),
+                  ),
+                  icon: const Icon(
+                    Icons.shopping_cart_outlined,
+                    size: 29,
+                  ),
                 ),
               ],
             ),
@@ -195,55 +385,48 @@ class HomePage extends StatelessWidget {
               horizontal: 18,
               vertical: 6,
             ),
-            child: Container(
-              height: 52,
-              decoration: BoxDecoration(
-                color: const Color(0xFF1A1E24),
-                borderRadius: BorderRadius.circular(28),
-                border: Border.all(
-                  color: const Color(0xFF303640),
+            child: InkWell(
+              onTap: onSearch,
+              borderRadius: BorderRadius.circular(28),
+              child: Container(
+                height: 54,
+                padding: const EdgeInsets.symmetric(horizontal: 17),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1E24),
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(
+                    color: const Color(0xFF303640),
+                  ),
                 ),
-              ),
-              child: const Row(
-                children: [
-                  SizedBox(width: 17),
-                  Icon(Icons.search, size: 28),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Search for products, brands & more',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
+                child: const Row(
+                  children: [
+                    Icon(Icons.search, size: 28),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Search for products, brands & more',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
-                  ),
-                  Icon(Icons.mic_none, size: 24),
-                  SizedBox(width: 14),
-                ],
+                    Icon(Icons.mic_none),
+                  ],
+                ),
               ),
             ),
           ),
         ),
 
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
+            padding: EdgeInsets.fromLTRB(18, 10, 18, 10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                _Benefit(
-                  Icons.local_shipping_outlined,
-                  'COD Available',
-                ),
-                _Benefit(
-                  Icons.inventory_2_outlined,
-                  '7-Day Return / Exchange',
-                ),
-                _Benefit(
-                  Icons.chat_outlined,
-                  'Order on WhatsApp',
-                ),
+              children: [
+                Benefit(Icons.local_shipping_outlined, 'COD Available'),
+                Benefit(Icons.inventory_2_outlined, '7-Day Return'),
+                Benefit(Icons.chat_outlined, 'WhatsApp Order'),
               ],
             ),
           ),
@@ -271,41 +454,52 @@ class HomePage extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.fromLTRB(18, 14, 18, 8),
               children: const [
-                _Circle('assets/images/cat_women_tops.png', 'Women Tops'),
-                _Circle('assets/images/cat_crop_tops.png', 'Crop Tops'),
-                _Circle('assets/images/cat_sarees.png', 'Sarees'),
-                _Circle('assets/images/cat_women_shoes.png', 'Women Shoes'),
-                _Circle('assets/images/cat_suits.png', 'Suits'),
-                _Circle('assets/images/cat_men_shirts.png', 'Men Shirts'),
-                _Circle('assets/images/icon_men_tshirt.png', 'Men T-Shirts'),
-                _Circle('assets/images/best_3.png', 'Baggy Jeans'),
+                CircleCat(
+                  'assets/images/cat_women_tops.png',
+                  'Women Tops',
+                ),
+                CircleCat(
+                  'assets/images/cat_crop_tops.png',
+                  'Crop Tops',
+                ),
+                CircleCat(
+                  'assets/images/cat_sarees.png',
+                  'Sarees',
+                ),
+                CircleCat(
+                  'assets/images/cat_women_shoes.png',
+                  'Women Shoes',
+                ),
+                CircleCat(
+                  'assets/images/cat_suits.png',
+                  'Suits',
+                ),
+                CircleCat(
+                  'assets/images/cat_men_shirts.png',
+                  'Men Shirts',
+                ),
+                CircleCat(
+                  'assets/images/icon_men_tshirt.png',
+                  'Men T-Shirts',
+                ),
+                CircleCat(
+                  'assets/images/best_3.png',
+                  'Baggy Jeans',
+                ),
               ],
             ),
           ),
         ),
 
         SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(18, 8, 18, 12),
-            child: Row(
-              children: [
-                const Text(
-                  'Shop by category',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const Spacer(),
-                const Text(
-                  'View all →',
-                  style: TextStyle(
-                    color: Color(0xFF3D9BFF),
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+          child: SectionTitle(
+            title: 'Shop by category',
+            button: 'View all →',
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const CategoriesPage(),
+              ),
             ),
           ),
         ),
@@ -314,15 +508,24 @@ class HomePage extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
           sliver: SliverGrid(
             delegate: SliverChildBuilderDelegate(
-              (c, i) => _CatCard(cats[i]),
-              childCount: cats.length,
+              (_, i) => CatCard(
+                category: categories[i],
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        CategoryPage(category: categories[i]),
+                  ),
+                ),
+              ),
+              childCount: categories.length,
             ),
             gridDelegate:
                 const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
-              childAspectRatio: 2.15,
+              childAspectRatio: 2.1,
             ),
           ),
         ),
@@ -342,46 +545,35 @@ class HomePage extends StatelessWidget {
           ),
         ),
 
-        // BEST SELLING
         SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(18, 0, 18, 12),
-            child: Row(
-              children: const [
-                Text(
-                  'Best Selling',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  'See all →',
-                  style: TextStyle(
-                    color: Color(0xFF3D9BFF),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+          child: SectionTitle(
+            title: 'Best Selling',
+            button: 'See all →',
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const SearchPage(showAll: true),
+              ),
             ),
           ),
         ),
 
         SliverToBoxAdapter(
           child: SizedBox(
-            height: 260,
+            height: 315,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 18),
-              itemCount: best.length,
-              itemBuilder: (c, i) => _Product(best[i]),
+              itemCount: 4,
+              itemBuilder: (_, i) => ProductCard(
+                product: products[i],
+              ),
             ),
           ),
         ),
 
         const SliverToBoxAdapter(
-          child: SizedBox(height: 18),
+          child: SizedBox(height: 25),
         ),
       ],
     );
@@ -392,61 +584,89 @@ class CategoriesPage extends StatelessWidget {
   const CategoriesPage({super.key});
 
   @override
-  Widget build(BuildContext c) {
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          const SliverToBoxAdapter(
-            child: _PageTitle('Categories'),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(18),
-            sliver: SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                (ctx, i) => GestureDetector(
-                  onTap: () => Navigator.push(
-                    ctx,
-                    MaterialPageRoute(
-                      builder: (_) => CategoryProductsPage(
-                        category: cats[i][0],
-                      ),
-                    ),
-                  ),
-                  child: _CatCard(cats[i]),
-                ),
-                childCount: cats.length,
-              ),
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 1.7,
-              ),
+      appBar: AppBar(title: const Text('Categories')),
+      body: GridView.builder(
+        padding: const EdgeInsets.all(18),
+        itemCount: categories.length,
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 1.55,
+        ),
+        itemBuilder: (_, i) => CatCard(
+          category: categories[i],
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) =>
+                  CategoryPage(category: categories[i]),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
+class SearchPage extends StatefulWidget {
+  final bool showAll;
+
+  const SearchPage({
+    super.key,
+    this.showAll = false,
+  });
 
   @override
-  Widget build(BuildContext c) {
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  final controller = TextEditingController();
+  String query = '';
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final q = query.trim().toLowerCase();
+
+    final results = q.isEmpty
+        ? (widget.showAll ? products : <Product>[])
+        : products.where((p) {
+            return p.name.toLowerCase().contains(q) ||
+                p.category.toLowerCase().contains(q);
+          }).toList();
+
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          children: [
-            const _PageTitle('Search'),
-            const SizedBox(height: 12),
-            TextField(
+      appBar: AppBar(title: const Text('Search')),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 8, 18, 12),
+            child: TextField(
+              controller: controller,
+              autofocus: true,
+              onChanged: (v) => setState(() => query = v),
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search),
-                hintText: 'Search fashion...',
+                suffixIcon: query.isEmpty
+                    ? null
+                    : IconButton(
+                        onPressed: () {
+                          controller.clear();
+                          setState(() => query = '');
+                        },
+                        icon: const Icon(Icons.clear),
+                      ),
+                hintText: 'Search products...',
                 filled: true,
                 fillColor: const Color(0xFF191D22),
                 border: OutlineInputBorder(
@@ -455,13 +675,41 @@ class SearchPage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'Try: shirts, sarees, shoes, baggy jeans',
-              style: TextStyle(color: Colors.white60),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: results.isEmpty
+                ? Center(
+                    child: Text(
+                      q.isEmpty
+                          ? 'Search shirts, sarees, shoes,\nbaggy jeans & more'
+                          : 'No products found',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white60,
+                        fontSize: 17,
+                      ),
+                    ),
+                  )
+                : GridView.builder(
+                    padding: const EdgeInsets.fromLTRB(
+                      14,
+                      0,
+                      14,
+                      20,
+                    ),
+                    itemCount: results.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: .62,
+                    ),
+                    itemBuilder: (_, i) =>
+                        ProductGrid(product: results[i]),
+                  ),
+          ),
+        ],
       ),
     );
   }
@@ -471,17 +719,39 @@ class WishlistPage extends StatelessWidget {
   const WishlistPage({super.key});
 
   @override
-  Widget build(BuildContext c) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Wishlist\nSave your favourite styles here',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Wishlist')),
+      body: AnimatedBuilder(
+        animation: store,
+        builder: (_, __) {
+          if (store.wishlist.isEmpty) {
+            return const Center(
+              child: Text(
+                'Your Wishlist is empty\nTap ♥ on products to save them',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          }
+
+          return GridView.builder(
+            padding: const EdgeInsets.all(14),
+            itemCount: store.wishlist.length,
+            gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: .62,
+            ),
+            itemBuilder: (_, i) =>
+                ProductGrid(product: store.wishlist[i]),
+          );
+        },
       ),
     );
   }
@@ -491,39 +761,114 @@ class CartPage extends StatelessWidget {
   const CartPage({super.key});
 
   @override
-  Widget build(BuildContext c) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Your Cart is empty\nAdd products from Best Selling',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Cart')),
+      body: AnimatedBuilder(
+        animation: store,
+        builder: (_, __) {
+          if (store.cart.isEmpty) {
+            return const Center(
+              child: Text(
+                'Your Cart is empty\nAdd products from the app',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          }
+
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(14),
+                  itemCount: store.cart.length,
+                  itemBuilder: (_, i) =>
+                      CartTile(item: store.cart[i]),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: const BoxDecoration(
+                  color: Color(0xFF11151A),
+                  border: Border(
+                    top: BorderSide(color: Color(0xFF303640)),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          'Total',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '₹${store.total}',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: FilledButton.icon(
+                        onPressed: () {
+                          final items = store.cart.map((x) {
+                            return '${x.product.name} | ${x.color} | Size ${x.size} | Qty ${x.quantity}';
+                          }).join('\n');
+
+                          whatsapp(
+                            product:
+                                'Cart Order\n$items\nTotal: ₹${store.total}',
+                          );
+                        },
+                        icon: const Icon(Icons.chat),
+                        label: const Text(
+                          'Order Cart on WhatsApp',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 }
 
-class CategoryProductsPage extends StatelessWidget {
+class CategoryPage extends StatelessWidget {
   final String category;
 
-  const CategoryProductsPage({
+  const CategoryPage({
     super.key,
     required this.category,
   });
 
   @override
-  Widget build(BuildContext c) {
+  Widget build(BuildContext context) {
     final items =
-        products.where((p) => p[2] == category).toList();
+        products.where((p) => p.category == category).toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(category),
-      ),
+      appBar: AppBar(title: Text(category)),
       body: GridView.builder(
         padding: const EdgeInsets.all(14),
         itemCount: items.length,
@@ -532,163 +877,569 @@ class CategoryProductsPage extends StatelessWidget {
           crossAxisCount: 2,
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
-          childAspectRatio: .68,
+          childAspectRatio: .62,
         ),
-        itemBuilder: (c, i) => _ProductGrid(items[i]),
+        itemBuilder: (_, i) =>
+            ProductGrid(product: items[i]),
       ),
     );
   }
 }
 
-class _ProductGrid extends StatelessWidget {
-  final List<String> d;
+class ProductDetailsPage extends StatefulWidget {
+  final Product product;
 
-  const _ProductGrid(this.d);
+  const ProductDetailsPage({
+    super.key,
+    required this.product,
+  });
 
   @override
-  Widget build(BuildContext c) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+  State<ProductDetailsPage> createState() =>
+      _ProductDetailsPageState();
+}
+
+class _ProductDetailsPageState
+    extends State<ProductDetailsPage> {
+  String size = 'M';
+  late String color;
+  int quantity = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    color = widget.product.colors.first;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final p = widget.product;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Product'),
+        actions: [
+          AnimatedBuilder(
+            animation: store,
+            builder: (_, __) => IconButton(
+              onPressed: () => store.toggleLike(p),
+              icon: Icon(
+                store.liked(p)
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+                color: store.liked(p)
+                    ? Colors.pinkAccent
+                    : null,
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const CartPage(),
+              ),
+            ),
+            icon: const Icon(Icons.shopping_cart_outlined),
+          ),
+        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
-                  ),
-                  child: Image.asset(
-                    d[3],
-                    width: double.infinity,
-                    height: 210,
-                    fit: BoxFit.cover,
-                  ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 25),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset(
+              p.image,
+              height: 390,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                18,
+                18,
+                18,
+                0,
+              ),
+              child: Text(
+                p.name,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w900,
                 ),
-                Positioned(
-                  right: 7,
-                  top: 7,
-                  child: CircleAvatar(
-                    radius: 17,
-                    backgroundColor: Colors.white70,
-                    child: const Icon(
-                      Icons.favorite_border,
-                      color: Colors.black,
-                      size: 20,
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                18,
+                8,
+                18,
+                18,
+              ),
+              child: Text(
+                p.price,
+                style: const TextStyle(
+                  fontSize: 23,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+
+            const Divider(),
+
+            Option(
+              title: 'Colour',
+              child: Wrap(
+                spacing: 8,
+                children: p.colors.map((c) {
+                  return ChoiceChip(
+                    label: Text(c),
+                    selected: color == c,
+                    onSelected: (_) =>
+                        setState(() => color = c),
+                  );
+                }).toList(),
+              ),
+            ),
+
+            Option(
+              title: 'Size',
+              child: Wrap(
+                spacing: 8,
+                children: ['S', 'M', 'L', 'XL'].map((s) {
+                  return ChoiceChip(
+                    label: Text(s),
+                    selected: size == s,
+                    onSelected: (_) =>
+                        setState(() => size = s),
+                  );
+                }).toList(),
+              ),
+            ),
+
+            Option(
+              title: 'Quantity',
+              child: Row(
+                children: [
+                  RoundButton(
+                    icon: Icons.remove,
+                    onTap: quantity > 1
+                        ? () => setState(() => quantity--)
+                        : null,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                    ),
+                    child: Text(
+                      '$quantity',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
+                  RoundButton(
+                    icon: Icons.add,
+                    onTap: () =>
+                        setState(() => quantity++),
+                  ),
+                ],
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                18,
+                12,
+                18,
+                8,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        store.add(
+                          p,
+                          color,
+                          size,
+                          quantity,
+                        );
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          const SnackBar(
+                            content: Text('Added to Cart'),
+                            behavior:
+                                SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.shopping_cart_outlined,
+                      ),
+                      label: const Text('Add to Cart'),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: () => whatsapp(
+                        product: p.name,
+                        color: color,
+                        size: size,
+                        quantity: quantity,
+                      ),
+                      icon: const Icon(Icons.chat),
+                      label: const Text('WhatsApp'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProductGrid extends StatelessWidget {
+  final Product product;
+
+  const ProductGrid({
+    super.key,
+    required this.product,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) =>
+              ProductDetailsPage(product: product),
+        ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(
+                    product.image,
+                    fit: BoxFit.cover,
+                  ),
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: Heart(product: product),
+                  ),
+                ],
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                10,
+                8,
+                10,
+                0,
+              ),
+              child: Text(
+                product.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                10,
+                4,
+                10,
+                0,
+              ),
+              child: Text(
+                product.price,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox(
+                width: double.infinity,
+                height: 34,
+                child: FilledButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          ProductDetailsPage(product: product),
+                    ),
+                  ),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text(
+                    'View Product',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProductCard extends StatelessWidget {
+  final Product product;
+
+  const ProductCard({
+    super.key,
+    required this.product,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 190,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 12),
+        child: ProductGrid(product: product),
+      ),
+    );
+  }
+}
+
+class Heart extends StatelessWidget {
+  final Product product;
+
+  const Heart({
+    super.key,
+    required this.product,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: store,
+      builder: (_, __) {
+        final selected = store.liked(product);
+
+        return Material(
+          color: Colors.white.withOpacity(.92),
+          shape: const CircleBorder(),
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: () => store.toggleLike(product),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Icon(
+                selected
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+                color: selected
+                    ? Colors.pinkAccent
+                    : Colors.black,
+                size: 21,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class CartTile extends StatelessWidget {
+  final CartItem item;
+
+  const CartTile({
+    super.key,
+    required this.item,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xFF151A20),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFF2A3038),
+        ),
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              item.product.image,
+              width: 82,
+              height: 100,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.product.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(item.product.price),
+                const SizedBox(height: 4),
+                Text(
+                  '${item.color} • Size ${item.size}',
+                  style: const TextStyle(
+                    color: Colors.white60,
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    SmallButton(
+                      icon: Icons.remove,
+                      onTap: () => store.qty(item, -1),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.symmetric(
+                        horizontal: 13,
+                      ),
+                      child: Text(
+                        '${item.quantity}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SmallButton(
+                      icon: Icons.add,
+                      onTap: () => store.qty(item, 1),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () => store.remove(item),
+                      icon: const Icon(
+                        Icons.delete_outline,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 7, 10, 0),
-            child: Text(
-              d[0],
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 3, 10, 0),
-            child: Text(
-              d[1],
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w800,
-                fontSize: 13,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: FilledButton(
-              onPressed: () => order(d[0]),
-              style: FilledButton.styleFrom(
-                backgroundColor: Colors.black,
-                minimumSize: const Size.fromHeight(32),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-              ),
-              child: const Text(
-                'Order on WhatsApp',
-                style: TextStyle(fontSize: 11),
-              ),
-            ),
-          ),
         ],
       ),
     );
   }
 }
 
-class _PageTitle extends StatelessWidget {
-  final String t;
+class CatCard extends StatelessWidget {
+  final String category;
+  final VoidCallback onTap;
 
-  const _PageTitle(this.t);
+  const CatCard({
+    super.key,
+    required this.category,
+    required this.onTap,
+  });
 
   @override
-  Widget build(BuildContext c) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 20, 18, 0),
-      child: Text(
-        t,
-        style: const TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.w900,
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(9),
+        decoration: BoxDecoration(
+          color: const Color(0xFF191D22),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: const Color(0xFF2B3038),
+          ),
+        ),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(11),
+              child: Image.asset(
+                categoryImage(category),
+                width: 62,
+                height: 62,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                category,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right,
+              color: Colors.white60,
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _Benefit extends StatelessWidget {
-  final IconData i;
-  final String t;
+class CircleCat extends StatelessWidget {
+  final String image, title;
 
-  const _Benefit(this.i, this.t);
-
-  @override
-  Widget build(BuildContext c) {
-    return Flexible(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            i,
-            size: 18,
-            color: const Color(0xFF36A8FF),
-          ),
-          const SizedBox(width: 5),
-          Flexible(
-            child: Text(
-              t,
-              style: const TextStyle(fontSize: 10),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Circle extends StatelessWidget {
-  final String img;
-  final String t;
-
-  const _Circle(this.img, this.t);
+  const CircleCat(this.image, this.title, {super.key});
 
   @override
-  Widget build(BuildContext c) {
+  Widget build(BuildContext context) {
     return SizedBox(
       width: 112,
       child: Column(
@@ -705,17 +1456,17 @@ class _Circle extends StatelessWidget {
             ),
             child: ClipOval(
               child: Image.asset(
-                img,
+                image,
                 fit: BoxFit.cover,
               ),
             ),
           ),
           const SizedBox(height: 6),
           Text(
-            t,
+            title,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 11),
             maxLines: 2,
+            style: const TextStyle(fontSize: 11),
           ),
         ],
       ),
@@ -723,61 +1474,39 @@ class _Circle extends StatelessWidget {
   }
 }
 
-class _CatCard extends StatelessWidget {
-  final List<String> d;
+class SectionTitle extends StatelessWidget {
+  final String title, button;
+  final VoidCallback onTap;
 
-  const _CatCard(this.d);
+  const SectionTitle({
+    super.key,
+    required this.title,
+    required this.button,
+    required this.onTap,
+  });
 
   @override
-  Widget build(BuildContext c) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: const Color(0xFF191D22),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFF2B3038),
-        ),
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        18,
+        8,
+        18,
+        12,
       ),
       child: Row(
         children: [
-          SizedBox(
-            width: 62,
-            height: 62,
-            child: Image.asset(
-              d[2],
-              fit: BoxFit.contain,
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  d[0],
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  d[1],
-                  style: const TextStyle(
-                    color: Colors.white54,
-                    fontSize: 10,
-                  ),
-                  maxLines: 2,
-                ),
-              ],
-            ),
-          ),
-          const Icon(
-            Icons.chevron_right,
-            color: Colors.white60,
+          const Spacer(),
+          TextButton(
+            onPressed: onTap,
+            child: Text(button),
           ),
         ],
       ),
@@ -785,80 +1514,30 @@ class _CatCard extends StatelessWidget {
   }
 }
 
-class _Product extends StatelessWidget {
-  final List<String> d;
+class Benefit extends StatelessWidget {
+  final IconData icon;
+  final String text;
 
-  const _Product(this.d);
+  const Benefit(this.icon, this.text, {super.key});
 
   @override
-  Widget build(BuildContext c) {
-    return Container(
-      width: 178,
-      margin: const EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
-                  ),
-                  child: Image.asset(
-                    d[2],
-                    width: 178,
-                    height: 190,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white70,
-                    child: const Icon(
-                      Icons.favorite_border,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          Icon(
+            icon,
+            size: 18,
+            color: const Color(0xFF36A8FF),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+          const SizedBox(width: 5),
+          Flexible(
             child: Text(
-              d[0],
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 3, 12, 0),
-            child: Text(
-              d[1],
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: FilledButton(
-              onPressed: () => order(d[0]),
-              style: FilledButton.styleFrom(
-                backgroundColor: Colors.black,
-                minimumSize: const Size.fromHeight(34),
-              ),
-              child: const Text('Order on WhatsApp'),
+              text,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 10),
             ),
           ),
         ],
@@ -866,9 +1545,131 @@ class _Product extends StatelessWidget {
     );
   }
 }
-  
-  
-  
 
+class Brand extends StatelessWidget {
+  const Brand({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (r) => const LinearGradient(
+        colors: [
+          Color(0xFF00B7FF),
+          Color(0xFF8B5CFF),
+          Color(0xFFFF38D1),
+        ],
+      ).createShader(r),
+      child: const Text(
+        'wellcool.',
+        style: TextStyle(
+          fontSize: 31,
+          fontWeight: FontWeight.w900,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+}
+
+class Option extends StatelessWidget {
+  final String title;
+  final Widget child;
+
+  const Option({
+    super.key,
+    required this.title,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        18,
+        16,
+        18,
+        2,
+      ),
+      child: Column(
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 9),
+          child,
+        ],
+      ),
+    );
+  }
+}
+
+class RoundButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback? onTap;
+
+  const RoundButton({
+    super.key,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFF1A2027),
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Icon(icon),
+        ),
+      ),
+    );
+  }
+}
+
+class SmallButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const SmallButton({
+    super.key,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: 30,
+        height: 30,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF39414B),
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(icon, size: 16),
+      ),
+    );
+  }
+}
+            
+
+
+
+
+      
 
 
