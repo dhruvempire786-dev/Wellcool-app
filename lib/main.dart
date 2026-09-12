@@ -18,37 +18,55 @@ class Product {
   });
 }
 
-const products = <Product>[
-  Product('Embroidered Peach Suit','₹1,499','Women Suits','assets/images/products/p01.jpg',colors:['Peach','Pink','White']),
-  Product('Sage Green Puff Sleeve Crop Top','₹799','Women Crop Tops','assets/images/products/p02.jpg',colors:['Sage Green','Black','White']),
-  Product('Sky Blue Graphic T-Shirt','₹699','Men T-Shirts','assets/images/products/p03.jpg',colors:['Sky Blue','Black','White']),
-  Product('Classic Blue Baggy Jeans','₹1,099','Men Baggy Jeans','assets/images/products/p04.jpg',colors:['Blue','Black','Grey']),
-  Product('White Wide-Leg Pants','₹999','Men Baggy Jeans','assets/images/products/p05.jpg',colors:['White','Black','Beige']),
-  Product('Teal Designer Saree','₹1,299','Women Sarees','assets/images/products/p06.jpg',colors:['Teal','Wine','Black']),
-  Product('Light Blue Casual Shirt','₹899','Men Shirts','assets/images/products/p07.jpg',colors:['Light Blue','White','Black']),
-  Product('Black Graphic Crop Top','₹699','Women Crop Tops','assets/images/products/p08.jpg',colors:['Black','White','Pink']),
-  Product('Yellow Puff Sleeve Top','₹749','Women Tops','assets/images/products/p09.jpg',colors:['Yellow','White','Pink']),
-  Product('Dusty Pink Casual Shirt','₹899','Men Shirts','assets/images/products/p10.jpg',colors:['Dusty Pink','White','Black']),
-  Product('Olive Floral Crop Top','₹799','Women Crop Tops','assets/images/products/p11.jpg',colors:['Olive','Black','White']),
-  Product('Wine Border Saree','₹1,199','Women Sarees','assets/images/products/p12.jpg',colors:['Wine','Red','Black']),
-  Product('Royal Blue Suit Set','₹1,399','Women Suits','assets/images/products/p13.jpg',colors:['Royal Blue','Pink','Black']),
-  Product('White Black Stripe T-Shirt','₹699','Men T-Shirts','assets/images/products/p14.jpg',colors:['White','Black','Grey']),
-  Product('Black Chunky Sneakers','₹1,199','Women Shoes / Sandals','assets/images/products/p15.jpg',colors:['Black','White','Beige']),
-  Product('White Casual Sneakers','₹999','Women Shoes / Sandals','assets/images/products/p16.jpg',colors:['White','Black','Pink']),
-  Product('White Navy Sneakers','₹1,099','Women Shoes / Sandals','assets/images/products/p17.jpg',colors:['White','Navy','Black']),
-  Product('Boston Oversized T-Shirt','₹749','Men T-Shirts','assets/images/products/p18.jpg',colors:['Black','White','Grey']),
-  Product('Washed Black Baggy Jeans','₹1,099','Men Baggy Jeans','assets/images/products/p19.jpg',colors:['Washed Black','Blue','Grey']),
-  Product('White Grey High-Top Sneakers','₹1,299','Men Shoes','assets/images/products/p20.jpg',colors:['White','Grey','Black']),
-  Product('White Navy Running Sneakers','₹1,199','Women Shoes / Sandals','assets/images/products/p21.jpg',colors:['White','Navy','Pink']),
-  Product('Cream Graphic T-Shirt','₹749','Men T-Shirts','assets/images/products/p22.jpg',colors:['Cream','Black','White']),
-  Product('Blue Printed Suit Set','₹1,399','Women Suits','assets/images/products/p23.jpg',colors:['Blue','Pink','Black']),
-  Product('Pink Casual Embroidered Top','₹799','Women Tops','assets/images/products/p24.jpg',colors:['Pink','White','Black']),
-  Product('Grey Orange Sport Sneakers','₹1,299','Men Shoes','assets/images/products/p25.jpg',colors:['Grey','Orange','Black']),
-  Product('Black Casual Shirt','₹899','Men Shirts','assets/images/products/p26.jpg',colors:['Black','White','Blue']),
-  Product('Light Blue Loose Baggy Jeans','₹1,099','Men Baggy Jeans','assets/images/products/p27.jpg',colors:['Light Blue','Blue','Black']),
-  Product('White Floral Puff Sleeve Top','₹799','Women Tops','assets/images/products/p28.jpg',colors:['White','Pink','Yellow']),
-  Product('Maroon Casual Shirt','₹899','Men Shirts','assets/images/products/p29.jpg',colors:['Maroon','White','Black']),
+const products = [
+  // WOMEN SUITS
+  ['Embroidered Peach Suit', '₹1,499', 'Women Suits', 'assets/images/products/p01.jpg'],
+  ['Royal Blue Suit Set', '₹1,399', 'Women Suits', 'assets/images/products/p15.jpg'],
+  ['Blue Printed Suit Set', '₹1,399', 'Women Suits', 'assets/images/products/p23.jpg'],
+
+  // WOMEN CROP TOPS
+  ['Sage Green Puff Sleeve Crop Top', '₹799', 'Women Crop Tops', 'assets/images/products/p02.jpg'],
+  ['Black Graphic Crop Top', '₹699', 'Women Crop Tops', 'assets/images/products/p08.jpg'],
+  ['Olive Green Puff Sleeve Crop Top', '₹799', 'Women Crop Tops', 'assets/images/products/p13.jpg'],
+
+  // WOMEN TOPS
+  ['Yellow Puff Sleeve Top', '₹749', 'Women Tops', 'assets/images/products/p09.jpg'],
+  ['Pink Casual Top', '₹799', 'Women Tops', 'assets/images/products/p11.jpg'],
+  ['Pink Checkered Casual Top', '₹799', 'Women Tops', 'assets/images/products/p24.jpg'],
+  ['White Floral Puff Sleeve Top', '₹799', 'Women Tops', 'assets/images/products/p28.jpg'],
+
+  // WOMEN SAREES
+  ['Teal Designer Saree', '₹1,299', 'Women Sarees', 'assets/images/products/p06.jpg'],
+  ['Wine Border Saree', '₹1,199', 'Women Sarees', 'assets/images/products/p14.jpg'],
+
+  // WOMEN SHOES / SANDALS
+  ['Black Navy Sneakers', '₹1,199', 'Women Shoes / Sandals', 'assets/images/products/p17.jpg'],
+  ['White Casual Sneakers', '₹999', 'Women Shoes / Sandals', 'assets/images/products/p18.jpg'],
+
+  // MEN SHIRTS
+  ['Light Blue Casual Shirt', '₹899', 'Men Shirts', 'assets/images/products/p07.jpg'],
+  ['Dusty Pink Casual Shirt', '₹899', 'Men Shirts', 'assets/images/products/p10.jpg'],
+  ['Black Casual Shirt', '₹899', 'Men Shirts', 'assets/images/products/p26.jpg'],
+  ['Maroon Casual Shirt', '₹899', 'Men Shirts', 'assets/images/products/p29.jpg'],
+
+  // MEN T-SHIRTS
+  ['Sky Blue Graphic T-Shirt', '₹699', 'Men T-Shirts', 'assets/images/products/p03.jpg'],
+  ['Navy Blue Stripe T-Shirt', '₹699', 'Men T-Shirts', 'assets/images/products/p12.jpg'],
+  ['White Black Stripe T-Shirt', '₹699', 'Men T-Shirts', 'assets/images/products/p16.jpg'],
+  ['Boston Oversized T-Shirt', '₹749', 'Men T-Shirts', 'assets/images/products/p22.jpg'],
+
+  // MEN BAGGY JEANS
+  ['Classic Blue Baggy Jeans', '₹1,099', 'Men Baggy Jeans', 'assets/images/products/p04.jpg'],
+  ['White Wide-Leg Pants', '₹999', 'Men Baggy Jeans', 'assets/images/products/p05.jpg'],
+  ['Washed Black Baggy Jeans', '₹1,099', 'Men Baggy Jeans', 'assets/images/products/p19.jpg'],
+  ['Light Blue Loose Baggy Jeans', '₹1,099', 'Men Baggy Jeans', 'assets/images/products/p27.jpg'],
+
+  // MEN SHOES
+  ['White Grey High-Top Sneakers', '₹1,299', 'Men Shoes', 'assets/images/products/p20.jpg'],
+  ['White Navy Running Sneakers', '₹1,199', 'Men Shoes', 'assets/images/products/p21.jpg'],
+  ['Grey Orange Sport Sneakers', '₹1,299', 'Men Shoes', 'assets/images/products/p25.jpg'],
 ];
+
 
 const categories = [
   'Women Tops',
