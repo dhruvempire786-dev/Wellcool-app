@@ -144,7 +144,7 @@ const SliverToBoxAdapter(
   child: SizedBox(height: 18),
 ),
   ]);
-
+}
 class CategoriesPage extends StatelessWidget { const CategoriesPage({super.key}); @override Widget build(BuildContext c)=>Scaffold(body:CustomScrollView(slivers:[const SliverToBoxAdapter(child:_PageTitle('Categories')),SliverPadding(padding:const EdgeInsets.all(18),sliver:SliverGrid(delegate:SliverChildBuilderDelegate((ctx,i)=>GestureDetector(onTap:()=>Navigator.push(ctx,MaterialPageRoute(builder:(_)=>CategoryProductsPage(category:cats[i][0]))),child:_CatCard(cats[i])),childCount:cats.length),gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount:2,crossAxisSpacing:12,mainAxisSpacing:12,childAspectRatio:1.7))) ])); }
 class SearchPage extends StatelessWidget { const SearchPage({super.key}); @override Widget build(BuildContext c)=>Scaffold(body:Padding(padding:const EdgeInsets.all(18),child:Column(children:[const _PageTitle('Search'),const SizedBox(height:12),TextField(decoration:InputDecoration(prefixIcon:const Icon(Icons.search),hintText:'Search fashion...',filled:true,fillColor:Color(0xFF191D22),border:OutlineInputBorder(borderRadius:BorderRadius.all(Radius.circular(18)),borderSide:BorderSide.none))),const SizedBox(height:20),const Text('Try: shirts, sarees, shoes, baggy jeans',style:TextStyle(color:Colors.white60))]))); }
 class WishlistPage extends StatelessWidget { const WishlistPage({super.key}); @override Widget build(BuildContext c)=>const Scaffold(body:Center(child:Text('Wishlist\nSave your favourite styles here',textAlign:TextAlign.center,style:TextStyle(fontSize:22,fontWeight:FontWeight.bold)))); }
